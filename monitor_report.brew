@@ -1,5 +1,3 @@
-#REPORT
-
 \documentclass[oneside]{article}
 
 \usepackage[margin=2cm,nohead]{geometry}
@@ -13,7 +11,7 @@
   pdfauthor={http://levisdoban.wordpress.com}
   }
 
-\graphicspath{{./graphics/}}
+
 
 \title{Access Server performance Report  }
 \author{\url{http://levisdoban.wordpress.com}}
@@ -43,6 +41,11 @@ This general report details your server performance based on access time, access
 
 <% if(i == 1){ -%>
 <%= preamble2 %>
+\begin{figure}[h]
+\centering
+\includegraphics[width=150mm]{<%= cat(d3) %>}
+\caption{ Average access time by time of day \label{overflow}}
+\end{figure}
 
 
 <% } -%>

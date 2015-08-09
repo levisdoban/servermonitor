@@ -19,6 +19,7 @@ PrepareRR=function()
   EnsurePackage("plotrix")
 }
 PrepareRR()
+# A function to generate png from plots
 
 #import the access.log file
 system.time({file <- read.table(file.choose())})
@@ -35,7 +36,9 @@ data$byhr = strftime(data$timestamp, "%H", tz="EAT")
 
 #REporting
 startdate = data$timestamp[1]
+stdate = format(startdate, format="%B %d, %Y")
 enddate = data$timestamp[nrow(data)-1]
+edate = format(enddate, format="%B %d, %Y")
 daysa = as.numeric(round(difftime(enddate,startdate,  units='days'),1))
 
 preamble = paste("This report covers server access time between ", startdate, " and ",  enddate, " approximately ", daysa, " days period.", sep="")
@@ -57,11 +60,24 @@ head(ips_reqs2)
 #Average request time for different times of the day
 iptime = aggregate(time ~ times, data = data,  FUN = mean)
 
+mean_access = ggplot(data=iptime, aes(x=times, y=time, fill=time)) +
+    geom_bar(stat="identity") + xlab("Time of day") + ylab("Mean access time in Milliseconds") 
+    #ggtitle("Average access time by time of day")
+
+d3 = paste(substitute(mean_access), "png", sep=".")
+png(file = d3, bg="transparent")
+mean_access
+dev.off()
+
+
 #Average request time for each hour
 hrtime = aggregate(time ~ byhr, data = data,  FUN = mean)
 
+
 #Percentage of server access status by time of day
-with(data, prop.table(table(times, status)))
+times_tb = with(data, table(times, status))
+
+
 
 #Brewery starts here
 #dir.create("Reports")
