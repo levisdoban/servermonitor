@@ -1,4 +1,5 @@
-
+#Ensure you have everything you need 
+setwd("C:\\Users\\user\\servermonitor")
 EnsurePackage<-function(x)
 {x = as.character(x)
  if (!require(x,character.only=TRUE))
@@ -16,13 +17,11 @@ PrepareRR=function()
   EnsurePackage("xtable")
   EnsurePackage("ggplot2")
   EnsurePackage("plotrix")
-  
-
 }
 PrepareRR()
 
 #import the access.log file
-system.time({file <- read.table(file.choose(), 1000000)})
+system.time({file <- read.table(file.choose())})
 
 #name the columns and remove some blank columns
 names(file) = c("ipaddr"," ", " ", "timestamp", "gmt", "target", "status", "time", " ", "verbose")
@@ -34,10 +33,21 @@ data = within(data, times <- as.factor(ifelse(strftime(data$timestamp, "%H", tz=
 data$time = as.numeric(data$time)
 data$byhr = strftime(data$timestamp, "%H", tz="EAT")
 
+#REporting
+startdate = data$timestamp[1]
+enddate = data$timestamp[nrow(data)-1]
+daysa = as.numeric(round(difftime(enddate,startdate,  units='days'),1))
+
+preamble = paste("This report covers server access time between ", startdate, " and ",  enddate, " approximately ", daysa, " days period.", sep="")
+
+
 #Number of 
 nof_ips = length(table(data$ipaddr))
+access = nrow(data)
+avacc = round(access/daysa, 0)
 #Number of different IPS accessing the server
-nof_ips
+acce = paste("There were a total of ", access, " access requests from ", nof_ips, " different IP addresses which comest to approximately ",  avacc, " access per day.", sep="")
+preamble2 = paste(preamble, acce, sep=" ") 
 
 #Number of requests per IP ordered from the most to least
 ips_reqs = as.data.frame(table(data$ipaddr))
@@ -54,6 +64,8 @@ hrtime = aggregate(time ~ byhr, data = data,  FUN = mean)
 with(data, prop.table(table(times, status)))
 
 #Brewery starts here
-dir.create("Reports")
-
-
+#dir.create("Reports")
+rep = paste(Sys.Date())
+ report_name =  paste("rep",rep, ".tex", sep="_" )
+   brew("monitor_report.brew", report_name)
+   texi2dvi(report_name, pdf = TRUE)
