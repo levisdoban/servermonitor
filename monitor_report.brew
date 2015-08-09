@@ -1,0 +1,80 @@
+#REPORT
+
+\documentclass[oneside]{article}
+
+\usepackage[margin=2cm,nohead]{geometry}
+\usepackage[pdftex]{graphicx}
+\usepackage{verbatim}
+
+
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  pdfauthor={http://levisdoban.wordpress.com}
+  }
+
+\graphicspath{{./graphics/}}
+
+\title{Access Server performance Report  }
+\author{\url{http://levisdoban.wordpress.com}}
+\date{\today}
+\raggedbottom
+\setcounter{tocdepth}{1}
+
+
+
+\begin{document}
+
+\maketitle
+
+This general report details your server performance based on access time, access errors and access IPs. 
+
+\tableofcontents
+
+<% foo <- c('Access Time', 'Breakdown by Time of day') %>
+
+
+<% for(i in 1:length(foo)){ -%>
+
+\pagebreak
+
+<% j = foo[i] %>
+<%= cat("\\section{", j, "}", sep="") -%>
+
+<% if(i == 1){ -%>
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=150mm]{<%= cat(imag) %>}
+\caption{Campaign image \label{overflow}}
+\end{figure}
+
+
+\begin{table}[h]
+\centering
+<%= print(xtable(tartab),floating=FALSE) %>
+\caption{Target details}
+\end{table}
+
+<% } -%>
+
+<% if(i == 2){ -%>
+<%= performance_report %>
+\begin{figure}[h]
+\centering
+\includegraphics[width=150mm]{<%= cat(adimpfile) %>}
+\caption{Graph of Performance \label{overflow}}
+\end{figure}
+
+<% } -%>
+
+
+
+\pagebreak
+
+<% } -%>
+
+
+
+
+\end{document}
