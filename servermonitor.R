@@ -69,3 +69,5 @@ rep = paste(Sys.Date())
  report_name =  paste("rep",rep, ".tex", sep="_" )
    brew("monitor_report.brew", report_name)
    texi2dvi(report_name, pdf = TRUE)
+
+
