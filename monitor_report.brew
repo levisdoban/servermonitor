@@ -58,10 +58,31 @@ This general report details your server performance based on access time, access
 \caption{Most accessed scripts}
 \end{table}
 
+The table below also shows the 10 top heavy scripts accessed from your server based on average access time in seconds.
+\begin{table}[h]
+\centering
+\input{./tb}
+\caption{Average access time for top 10 heavy scripts}
+\end{table}
+
 <% } -%>
 
 <% if(i == 2){ -%>
-<%= preamble2 %>
+<%= story4 %>
+\begin{table}[h]
+\centering
+\input{./tc}
+\caption{Breakdown of server access status}
+\end{table}
+
+<%= story5 %>
+\begin{table}[h]
+\centering
+\input{./tz}
+\quad
+\input{./ty}
+\caption{Top errors by time of day}
+\end{table}
 
 
 <% } -%>

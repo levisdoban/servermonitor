@@ -99,11 +99,47 @@ tt2 = tt[1:10,]
 names(tt2) = c("Script", "Access Freq.")
 
 story3 = paste("There are a total of ", nrow(tt), " different scripts that are being accessed by your users, the most higly accessed are listed in the table below", sep="")
-print(xtable(tt2), file="ta.tex", floating=FALSE)
+print(xtable(tt2), file="ta.tex", include.rownames = FALSE,floating=FALSE)
+
+trtime = aggregate(time ~ target, data = data,  FUN = median)
+trtime = trtime[order(-trtime[,2]),]
+trtime2 = trtime[1:10,]
+trtime2$access =  round(trtime2[,2]/100,1)
+trtime2 = trtime2[,-2]
+names(trtime2) = c("Script", "Access Time in seconds")
+print(xtable(trtime2), file="tb.tex", include.rownames = FALSE,floating=FALSE)
+
+
+### Access status
+
 
 #Percentage of server access status by time of day
-times_tb = with(data, table(times, status))
+tstatus_prop = as.data.frame(with(data, table(status)))
+names(tstatus_prop)[1] = "Apache Status Code"
+tstatus_prop$Percentage = round(tstatus_prop[,2]/sum(tstatus_prop[,2])*100,2)
+print(xtable(tstatus_prop), file="tc.tex", include.rownames = FALSE,floating=FALSE)
+sucm = tstatus_prop[grep("200", tstatus_prop[,1]), 3]
+story4 = paste("There were a total of ", access, " access requests logged by your server, of these, ", sucm, " percent were successful. The table below shows the breakdown by server status code.", sep="")
+top3err = tstatus_prop[order(-tstatus_prop[,2]),]
+top3err = as.character(top3err[2:4,1])
 
+data2 = data[data$status!=200,]
+data3 = data2[data$status %in% top3err,] 
+stat_times = with(data3, table(status, times))
+kytest = chisq.test(stat_times)
+stats = data.frame(round(kytest$statistic, 4),kytest$parameter,kytest$p.value)
+names(stats) = c("X-squared", "df", "p-value")
+
+stats = paste("X-squared = ", round(kytest$statistic, 4), ", df = ",kytest$parameter, ", p-value = ", kytest$p.value, sep="")
+ndio = " there is statistically significant evidence to support the idea that some errors in your server occur at particular times, the results are as below" 
+la = " there is no statistically significant evidence to support the idea that some errors in your server occur at particular times the results are as below"
+result = ifelse(kytest$p.value < 0.05, ndio, la) 
+
+print(xtable(stat_times), file="tz.tex", include.rownames = TRUE,floating=FALSE)
+
+print(xtable(stats), file="ty.tex", include.rownames = FALSE,floating=FALSE)
+
+story5 = paste("A Chi-Square test of independence to determine whether your top three errors occur at particular times of day indicates that ",result, sep="")
 
 
 #Brewery starts here
