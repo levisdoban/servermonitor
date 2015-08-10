@@ -29,7 +29,7 @@ This general report details your server performance based on access time, access
 
 \tableofcontents
 
-<% foo <- c('Access Time', 'Breakdown by Time of day') %>
+<% foo <- c('Access Time', 'Access Status', 'Conclusion') %>
 
 
 <% for(i in 1:length(foo)){ -%>
@@ -50,6 +50,14 @@ This general report details your server performance based on access time, access
 \end{figure}
 <%= story %>
 <%= story2 %>
+<%= story3 %>
+
+\begin{table}[h]
+\centering
+\input{./ta}
+\caption{Most accessed scripts}
+\end{table}
+
 <% } -%>
 
 <% if(i == 2){ -%>

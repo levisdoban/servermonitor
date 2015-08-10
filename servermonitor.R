@@ -93,6 +93,13 @@ badti2 = as.character(hrtime[hrtime$time == timax2,1])
 goodti2 = as.character(hrtime[hrtime$time == timin2,1])
 story2 = paste("On a hour-by-hour breakdown, your servers are easily reachable around ", goodti2, "00HR when the average access time is about ",  round(timin2/100,1), " Seconds. Your servers are much busier around ", badti2, "00HRS when access time averages ",  round(timax2/100,1), " seconds.", sep="")
 
+tt = as.data.frame(table(data$target))
+tt = tt[order(-tt[,2]),]
+tt2 = tt[1:10,]
+names(tt2) = c("Script", "Access Freq.")
+
+story3 = paste("There are a total of ", nrow(tt), " different scripts that are being accessed by your users, the most higly accessed are listed in the table below", sep="")
+print(xtable(tt2), file="ta.tex", floating=FALSE)
 
 #Percentage of server access status by time of day
 times_tb = with(data, table(times, status))
