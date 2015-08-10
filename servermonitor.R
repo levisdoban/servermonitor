@@ -41,7 +41,7 @@ enddate = data$timestamp[nrow(data)-1]
 edate = format(enddate, format="%B %d, %Y")
 daysa = as.numeric(round(difftime(enddate,startdate,  units='days'),1))
 
-preamble = paste("This report covers server access time between ", startdate, " and ",  enddate, " approximately ", daysa, " days period.", sep="")
+preamble = paste("This report covers server access time between ", stdate, " and ",  edate, " approximately ", daysa, " days period.", sep="")
 
 
 #Number of 
@@ -68,10 +68,30 @@ d3 = paste(substitute(mean_access), "png", sep=".")
 png(file = d3, bg="transparent")
 mean_access
 dev.off()
-
+timax = max(iptime$time)
+timin = min(iptime$time)
+badti = as.character(iptime[iptime$time == timax,1])
+goodti = as.character(iptime[iptime$time == timin,1])
+story = paste("On average, your servers are easily reachable in the ", goodti, " when the average access time is about ",  round(timin/100,1), " Seconds. Your servers are much busier in the ", badti, " with an access time averageing ",  round(timax/100,1), " seconds.", sep="")
 
 #Average request time for each hour
 hrtime = aggregate(time ~ byhr, data = data,  FUN = mean)
+
+#mean_access_hr = ggplot(data=hrtime, aes(x=byhr, y=time, fill=byhr)) +
+ #   geom_bar(stat="identity") + xlab("Hour of Day") + ylab("Mean access time in Milliseconds") 
+    #ggtitle("Average access time by time of day")
+
+mean_access_hr = ggplot(data=hrtime, aes(x=as.numeric(byhr), y=time)) + geom_line()+ xlab("Hour of Day") + ylab("Mean access time in Milliseconds")
+
+d4 = paste(substitute(mean_access_hr), "png", sep=".")
+png(file = d4, bg="transparent")
+mean_access_hr
+dev.off()
+timax2 = max(hrtime$time)
+timin2 = min(hrtime$time)
+badti2 = as.character(hrtime[hrtime$time == timax2,1])
+goodti2 = as.character(hrtime[hrtime$time == timin2,1])
+story2 = paste("On a hour-by-hour breakdown, your servers are easily reachable around ", goodti2, "00HR when the average access time is about ",  round(timin2/100,1), " Seconds. Your servers are much busier around ", badti2, "00HRS when access time averages ",  round(timax2/100,1), " seconds.", sep="")
 
 
 #Percentage of server access status by time of day

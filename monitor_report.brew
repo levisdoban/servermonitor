@@ -42,12 +42,14 @@ This general report details your server performance based on access time, access
 <% if(i == 1){ -%>
 <%= preamble2 %>
 \begin{figure}[h]
-\centering
-\includegraphics[width=150mm]{<%= cat(d3) %>}
+
+\includegraphics[width=70mm, height =100mm]{<%= cat(d3) %>}
+\includegraphics[width=130mm, height =100mm]{<%= cat(d4) %>}
 \caption{ Average access time by time of day \label{overflow}}
+\caption{ Average access time by hour  \label{overflow}}
 \end{figure}
-
-
+<%= story %>
+<%= story2 %>
 <% } -%>
 
 <% if(i == 2){ -%>
