@@ -135,7 +135,7 @@ ndio = " there is statistically significant evidence to support the idea that so
 la = " there is no statistically significant evidence to support the idea that some errors in your server occur at particular times the results are as below"
 result = ifelse(kytest$p.value < 0.05, ndio, la) 
 
-print(xtable(stat_times), file="tz.tex", include.rownames = TRUE,floating=FALSE)
+print(xtable(kytest$expected), file="tz.tex", include.rownames = TRUE,floating=FALSE)
 
 print(xtable(stats), file="ty.tex", include.rownames = FALSE,floating=FALSE)
 
